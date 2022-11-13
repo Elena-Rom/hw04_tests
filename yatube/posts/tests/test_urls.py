@@ -27,7 +27,8 @@ class URLTests(TestCase):
         self.authorized_client.force_login(URLTests.user)
 
     def test_urls_uses_correct_template(self):
-        """URL-адрес использует соответствующий шаблон. Для всех пользователей"""
+        """URL-адрес использует соответствующий шаблон.
+        Для всех пользователей"""
         templates_url_names = {
             'posts/index.html': '/',
             'posts/group_list.html': f'/group/{self.group.slug}/',
@@ -45,13 +46,17 @@ class URLTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_create_url_uses_correct_template(self):
-        """Страница по адресу /create/ использует шаблон posts/create_post.html."""
+        """Страница по адресу /create/
+        использует шаблон posts/create_post.html."""
         response = self.authorized_client.get('/create/')
         self.assertTemplateUsed(response, 'posts/create_post.html')
 
     def test_edit_url_uses_correct_template_for_author(self):
-        """Страница /posts/<post_id>/edit/ использует шаблон posts/create_post.html. Доступно только автору"""
+        """Страница /posts/<post_id>/edit/
+        использует шаблон posts/create_post.html.
+        Доступно только автору"""
         with self.subTest(author=self.user):
-            response = self.authorized_client.get(f'/posts/{self.post.id}/edit/')
+            response = self.authorized_client.get(
+                f'/posts/{self.post.id}/edit/'
+            )
             self.assertTemplateUsed(response, 'posts/create_post.html')
-

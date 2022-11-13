@@ -1,10 +1,7 @@
 from http import HTTPStatus
 
-from django import forms
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, TestCase, override_settings
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from ..models import Group, Post, User
@@ -44,9 +41,14 @@ class PostCreateFormTests(TestCase):
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, reverse(
-                    'posts:profile', kwargs={'username': self.user}))
-        self.assertEqual(Post.objects.count(), post_count + 1, 'Постов не увеличилось на 1')
+        self.assertRedirects(
+            response, reverse(
+                'posts:profile',
+                kwargs={'username': self.user}
+            )
+        )
+        self.assertEqual(Post.objects.count(),
+                         post_count + 1, 'Постов не увеличилось на 1')
         self.assertTrue(
             Post.objects.filter(
                 text='Тестовый текст2',
@@ -75,6 +77,7 @@ class PostCreateFormTests(TestCase):
                 group=self.group.id,
             ).exists()
         )
-        self.assertEqual(Post.objects.get(id=self.post.id).text, form_data['text'])
-
-
+        self.assertEqual(
+            Post.objects.get(
+                id=self.post.id).text,
+            form_data['text'])
