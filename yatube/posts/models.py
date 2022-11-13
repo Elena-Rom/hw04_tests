@@ -14,7 +14,10 @@ class Group(models.Model):
 
 
 class Post(models.Model):
-    text = models.TextField(verbose_name='Текст поста', help_text='Введите текст поста')
+    text = models.TextField(
+        verbose_name='Текст поста',
+        help_text='Введите текст поста'
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User,
