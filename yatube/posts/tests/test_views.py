@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Post, Group
+from ..models import Group, Post
 
 User = get_user_model()
 
@@ -41,23 +41,19 @@ class ViewsTests(TestCase):
             'posts/group_list.html':
                 reverse(
                     'posts:group_list',
-                    kwargs={'slug': 'test-slug'}
-                ),
+                    kwargs={'slug': 'test-slug'}),
             'posts/profile.html':
                 reverse(
                     'posts:profile',
-                    kwargs={'username': self.user}
-                ),
+                    kwargs={'username': self.user}),
             'posts/post_detail.html':
                 reverse(
                     'posts:post_detail',
-                    kwargs={'post_id': self.post.id}
-                ),
+                    kwargs={'post_id': self.post.id}),
             'posts/create_post.html':
                 reverse(
                     'posts:post_edit',
-                    kwargs={'post_id': self.post.id}
-                ),
+                    kwargs={'post_id': self.post.id}),
         }
         for template, reverse_name in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
