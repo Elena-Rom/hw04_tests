@@ -5,9 +5,7 @@ from django.urls import reverse
 
 from ..models import Post, Group
 
-
 User = get_user_model()
-TEST_OF_POST = 13
 
 
 class ViewsTests(TestCase):
@@ -42,24 +40,24 @@ class ViewsTests(TestCase):
             'posts/index.html': reverse('posts:index'),
             'posts/group_list.html':
                 reverse(
-                'posts:group_list',
-                kwargs={'slug': 'test-slug'}
-            ),
+                    'posts:group_list',
+                    kwargs={'slug': 'test-slug'}
+                ),
             'posts/profile.html':
                 reverse(
-                'posts:profile',
-                kwargs={'username': self.user}
-            ),
+                    'posts:profile',
+                    kwargs={'username': self.user}
+                ),
             'posts/post_detail.html':
                 reverse(
-                'posts:post_detail',
-                kwargs={'post_id': self.post.id}
-            ),
+                    'posts:post_detail',
+                    kwargs={'post_id': self.post.id}
+                ),
             'posts/create_post.html':
                 reverse(
-                'posts:post_edit',
-                kwargs={'post_id': self.post.id}
-            ),
+                    'posts:post_edit',
+                    kwargs={'post_id': self.post.id}
+                ),
         }
         for template, reverse_name in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
@@ -150,6 +148,9 @@ class ViewsTests(TestCase):
         self.assertIn(self.post, profile)
 
 
+TEST_OF_POST = 13
+
+
 class PaginatorViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -172,7 +173,7 @@ class PaginatorViewsTest(TestCase):
 
     def test_first_page_contains_ten_records(self):
         response = self.guest_client.get(reverse('posts:index'))
-        self.assertEqual(len(response.context['page_obj']), 3)
+        self.assertEqual(len(response.context['page_obj']), 10)
 
     def test_second_page_contains_three_records(self):
         response = self.guest_client.get(reverse('posts:index') + '?page=2')
@@ -182,7 +183,7 @@ class PaginatorViewsTest(TestCase):
         response = self.guest_client.get(
             reverse(
                 'posts:group_list',
-                kwargs={'slug': 'test-slug'}
+                kwargs={'slug': 'slug_slug'}
             )
         )
         self.assertEqual(len(response.context['page_obj']), 10)
