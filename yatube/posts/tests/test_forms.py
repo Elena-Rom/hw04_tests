@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from .. import models
 from ..models import Post, Group
 
 User = get_user_model()
@@ -14,14 +13,13 @@ class PostCreateFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        from yatube.posts import models
-        cls.user = models.User.objects.create(username='HASNoName')
-        cls.group = models.Group.objects.create(
+        cls.user = User.objects.create(username='HASNoName')
+        cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='Тестовый слаг',
             description='Тестовое описание',
         )
-        cls.post = models.Post.objects.create(
+        cls.post = Post.objects.create(
             author=cls.user,
             text='Тестовый пост',
             group=cls.group
@@ -33,7 +31,7 @@ class PostCreateFormTests(TestCase):
 
     def test_create_post(self):
         """Cоздаётся новая запись в базе данных"""
-        post_count = models.Post.objects.count()
+        post_count = Post.objects.count()
         form_data = {
             'text': 'Тестовый текст2',
             'group': self.group.id,
@@ -49,10 +47,10 @@ class PostCreateFormTests(TestCase):
                 kwargs={'username': self.user}
             )
         )
-        self.assertEqual(models.Post.objects.count(),
+        self.assertEqual(Post.objects.count(),
                          post_count + 1, 'Постов не увеличилось на 1')
         self.assertTrue(
-            models.Post.objects.filter(
+            Post.objects.filter(
                 text='Тестовый текст2',
                 author=self.user,
                 group=self.group.id,
@@ -61,7 +59,7 @@ class PostCreateFormTests(TestCase):
 
     def test_edit_post(self):
         """Редактирование поста в базе данных"""
-        post_count = models.Post.objects.count()
+        post_count = Post.objects.count()
         form_data = {
             'text': 'Меняем текст',
             'group': self.group.id,
@@ -72,14 +70,14 @@ class PostCreateFormTests(TestCase):
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(models.Post.objects.count(), post_count)
+        self.assertEqual(Post.objects.count(), post_count)
         self.assertTrue(
-            models.Post.objects.filter(
+            Post.objects.filter(
                 text='Меняем текст',
                 group=self.group.id,
             ).exists()
         )
         self.assertEqual(
-            models.Post.objects.get(
+            Post.objects.get(
                 id=self.post.id).text,
             form_data['text'])
