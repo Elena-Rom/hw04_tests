@@ -51,7 +51,7 @@ class PostCreateFormTests(TestCase):
                          post_count + 1, 'Постов не увеличилось на 1')
         self.assertTrue(
             Post.objects.filter(
-                text='Тестовый текст2',
+                text=form_data['text'],
                 author=self.user,
                 group=self.group.id,
             ).exists()
@@ -73,7 +73,7 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(Post.objects.count(), post_count)
         self.assertTrue(
             Post.objects.filter(
-                text='Меняем текст',
+                text=form_data['text'],
                 group=self.group.id,
             ).exists()
         )
