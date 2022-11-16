@@ -23,6 +23,12 @@ class URLTests(TestCase):
             slug='test-slug',
             description="Тестовое описание",
         )
+        cls.templates_url_names = {
+            'posts/index.html': '/',
+            'posts/group_list.html': f'/group/{cls.group.slug}/',
+            'posts/profile.html': f'/profile/{cls.user}/',
+            'posts/post_detail.html': f'/posts/{cls.post.id}/',
+        }
 
     def setUp(self):
         self.guest_client = Client()
@@ -34,13 +40,7 @@ class URLTests(TestCase):
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон.
         Для всех пользователей"""
-        templates_url_names = {
-            'posts/index.html': '/',
-            'posts/group_list.html': f'/group/{self.group.slug}/',
-            'posts/profile.html': f'/profile/{self.user}/',
-            'posts/post_detail.html': f'/posts/{self.post.id}/',
-        }
-        for template, address in templates_url_names.items():
+        for template, address in self.templates_url_names.items():
             with self.subTest(address=address):
                 response = self.guest_client.get(address)
                 self.assertTemplateUsed(response, template)

@@ -68,17 +68,15 @@ class ViewsTests(TestCase):
     def test_index_page_show_correct_context(self):
         """Шаблон index сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse('posts:index'))
-        try:
-            self.assertIn(['page_obj'][0], response.context)
-            first_object = response.context['page_obj'][0]
-            post_author_0 = first_object.author
-            post_text_0 = first_object.text
-            group_slug_0 = first_object.group.slug
-            self.assertEqual(post_author_0, self.post.author)
-            self.assertEqual(post_text_0, self.post.text)
-            self.assertEqual(group_slug_0, self.group.slug)
-        except TypeError:
-            print('Отсутствует контекст для тестирования')
+        self.assertIn(['page_obj'][0], response.context,
+                      'Отсутствует контекст для тестирования')
+        first_object = response.context['page_obj'][0]
+        post_author_0 = first_object.author
+        post_text_0 = first_object.text
+        group_slug_0 = first_object.group.slug
+        self.assertEqual(post_author_0, self.post.author)
+        self.assertEqual(post_text_0, self.post.text)
+        self.assertEqual(group_slug_0, self.group.slug)
 
     def test_group_page_show_correct_context(self):
         """Шаблон  group_list сформирован с правильным контекстом."""
@@ -88,13 +86,11 @@ class ViewsTests(TestCase):
                 kwargs={'slug': self.group.slug}
             )
         )
-        try:
-            self.assertIn(['page_obj'][0], response.context)
-            first_object = response.context['page_obj'][0]
-            post_group_0 = first_object.group.title
-            self.assertEqual(post_group_0, self.group.title)
-        except TypeError:
-            print('Отсутствует контекст для тестирования')
+        self.assertIn(['page_obj'][0], response.context,
+                      'Отсутствует контекст для тестирования')
+        first_object = response.context['page_obj'][0]
+        post_group_0 = first_object.group.title
+        self.assertEqual(post_group_0, self.group.title)
 
     def test_profile_page_show_correct_context(self):
         """Шаблон  profile сформирован с правильным контекстом."""
@@ -104,13 +100,11 @@ class ViewsTests(TestCase):
                 kwargs={'username': self.user}
             )
         )
-        try:
-            self.assertIn(['page_obj'][0], response.context)
-            first_object = response.context['page_obj'][0]
-            post_author_0 = first_object.author
-            self.assertEqual(post_author_0, self.user)
-        except TypeError:
-            print('Отсутствует контекст для тестирования')
+        self.assertIn(['page_obj'][0], response.context,
+                      'Отсутствует контекст для тестирования')
+        first_object = response.context['page_obj'][0]
+        post_author_0 = first_object.author
+        self.assertEqual(post_author_0, self.user)
 
     def test_detail_page_show_correct_context(self):
         """Шаблон  post_detail сформирован с правильным контекстом."""
@@ -191,7 +185,7 @@ class PaginatorViewsTest(TestCase):
         response = self.guest_client.get(
             reverse(
                 'posts:group_list',
-                kwargs={'slug': 'slug_slug'}
+                kwargs={'slug': self.group.slug}
             )
         )
         self.assertEqual(len(response.context['page_obj']), 10)
